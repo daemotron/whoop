@@ -43,13 +43,16 @@
 void
 show_usage(const char *progname)
 {
-    printf("usage: %s <command> [command-specific arguments]\n"
+    printf("usage: %s [--version] [--help] COMMAND [ARGS]\n"
            "\n"
-           "\thelp\tprint this help\n"
-           "\t\tif followed  by a command, print help for this command\n"
-           "\tnew\tcreate a new project\n"
-           "\tversion\tshow version information\n", 
-           progname);
+		   "Type '%s help COMMAND' for help on a specific command.\n"
+		   "\n"
+		   "The most commonly used %s commands are:\n"
+           "   new        create a new project\n"
+           "   version    show version information\n"
+		   "\n"
+		   "Please report any issues like bugs etc. to <jesco.freund@my-universe.com>\n", 
+           progname, progname, progname);
 }
 
 void
