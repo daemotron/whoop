@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  | _|      (__)                           
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file whoop.h
- * @brief whoop header file
+ * @file new.c
+ * @brief whoop CLI new command
  *
  * @copyright
  * ====================================================================
@@ -33,24 +33,20 @@
  * @version $Id$
  */
 
-#ifndef WHOOP_H_
-#define WHOOP_H_
+#include <stdio.h>
+#include <stdlib.h>
+#include <libgen.h>
+#include <string.h>
+#include <unistd.h>
 
-#define WHOOP "____    __    ____  __    __    ______     ______   .______    __ \n"\
-              "\\   \\  /  \\  /   / |  |  |  |  /  __  \\   /  __  \\  |   _  \\  |  |\n"\
-              " \\   \\/    \\/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  |\n"\
-              "  \\            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  |\n"\
-              "   \\    /\\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__|\n"\
-              "    \\__/  \\__/     |__|  |__|  \\______/   \\______/  | _|      (__)\n"\
+#include "cli.h"
 
-
-typedef enum
+extern int
+cmd_new(int argc, char * const *argv)
 {
-    CMD_ILLEGAL,    /* must remain in the first place so it keeps assigned to zero */
-    CMD_NEW,
-    CMD_HELP,
-    CMD_VERSION,
-    CMD_WHOOP,
-} cmd_t;
+	char *project_name = NULL;
+	project_name = (char *)malloc(strlen(argv[argc - 1]) + 1);
+	strncpy(project_name, argv[argc - 1], strlen(argv[argc - 1]) + 1);
+	return 1;
+}
 
-#endif /* WHOOP_H_ */

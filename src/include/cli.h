@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file buffer.h
- * @brief whoop output buffer header file
+ * @file whoop.h
+ * @brief whoop header file
  *
  * @copyright
  * ====================================================================
@@ -32,10 +32,28 @@
  *
  * @version $Id$
  */
- 
-typedef struct buffer
+
+#ifndef CLI_H_
+#define CLI_H_
+
+#define WHOOP "____    __    ____  __    __    ______     ______   .______    __ \n"\
+              "\\   \\  /  \\  /   / |  |  |  |  /  __  \\   /  __  \\  |   _  \\  |  |\n"\
+              " \\   \\/    \\/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  |\n"\
+              "  \\            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  |\n"\
+              "   \\    /\\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__|\n"\
+              "    \\__/  \\__/     |__|  |__|  \\______/   \\______/  |__|      (__)\n"\
+
+
+typedef enum
 {
-    char *chain;
-    size_t 
-} buffer_t;
- 
+    CMD_ILLEGAL,    /* must remain in the first place so it keeps assigned to zero */
+    CMD_NEW,
+    CMD_HELP,
+    CMD_VERSION,
+    CMD_WHOOP,
+} cmd_t;
+
+extern int cmd_help(int argc, char * const *argv);
+extern int cmd_new(int argc, char * const *argv);
+
+#endif /* CLI_H_ */

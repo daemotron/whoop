@@ -4,7 +4,7 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  | _|      (__)                           
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
  * @file whoop.c
  * @brief whoop CLI tool
@@ -37,8 +37,9 @@
 #include <stdlib.h>
 #include <libgen.h>
 #include <string.h>
+#include <unistd.h>
 
-#include "whoop.h"
+#include "cli.h"
 
 void
 show_usage(const char *progname)
@@ -96,6 +97,12 @@ main(int argc, char **argv)
     {
         switch(command)
         {
+			case CMD_NEW:
+				if (cmd_new(argc, argv))
+					return EXIT_SUCCESS;
+				else
+					return EXIT_FAILURE;
+				break;
             case CMD_WHOOP:
                 printf(WHOOP "\nI can do it louder than you...\n");
                 return EXIT_SUCCESS;
@@ -118,6 +125,6 @@ ____    __    ____  __    __    ______     ______   .______    __
  \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
   \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
    \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
-    \__/  \__/     |__|  |__|  \______/   \______/  | _|      (__)                           
+    \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
 
 #endif

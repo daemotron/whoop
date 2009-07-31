@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file buffer.h
- * @brief whoop output buffer header file
+ * @file help.c
+ * @brief whoop CLI help command
  *
  * @copyright
  * ====================================================================
@@ -32,10 +32,24 @@
  *
  * @version $Id$
  */
- 
-typedef struct buffer
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <libgen.h>
+#include <string.h>
+#include <unistd.h>
+
+#include "cli.h"
+
+extern int
+cmd_help(int argc, char * const *argv)
 {
-    char *chain;
-    size_t 
-} buffer_t;
- 
+	char *help_cmd = NULL;
+	if (argc > 1)
+	{
+		help_cmd = (char *)malloc(strlen(argv[2]) + 1);
+		strncpy(help_cmd, argv[2], strlen(argv[2]) + 1);
+	}
+	return 1;
+}
+
