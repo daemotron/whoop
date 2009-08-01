@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file whoop.h
- * @brief whoop header file
+ * @file version.c
+ * @brief whoop CLI version command
  *
  * @copyright
  * ====================================================================
@@ -33,28 +33,23 @@
  * @version $Id$
  */
 
-#ifndef CLI_H_
-#define CLI_H_
+#include <stdio.h>
+#include <stdlib.h>
+#include <libgen.h>
+#include <string.h>
+#include <unistd.h>
 
-#define WHOOP "____    __    ____  __    __    ______     ______   .______    __ \n"\
-              "\\   \\  /  \\  /   / |  |  |  |  /  __  \\   /  __  \\  |   _  \\  |  |\n"\
-              " \\   \\/    \\/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  |\n"\
-              "  \\            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  |\n"\
-              "   \\    /\\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__|\n"\
-              "    \\__/  \\__/     |__|  |__|  \\______/   \\______/  |__|      (__)\n"\
+#include "cli.h"
+#include "config.h"
 
-
-typedef enum
+extern int
+cmd_version(int argc, char * const *argv)
 {
-    CMD_ILLEGAL,    /* must remain in the first place so it keeps assigned to zero */
-    CMD_NEW,
-    CMD_HELP,
-    CMD_VERSION,
-    CMD_WHOOP,
-} cmd_t;
+#ifdef VERSION_ISRELEASE
+	printf("%s version %d.%d.%d\n", basename(argv[0]), VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);
+#else
+	printf("%s development version (%s branch)\n", basename(argv[0]), VERSION_BRANCH);
+#endif
+	return 1;
+}
 
-extern int cmd_help(int argc, char * const *argv);
-extern int cmd_new(int argc, char * const *argv);
-extern int cmd_version(int argc, char * const *argv);
-
-#endif /* CLI_H_ */

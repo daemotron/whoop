@@ -40,83 +40,84 @@
 #include <unistd.h>
 
 #include "cli.h"
+#include "config.h"
 
 void
 show_usage(const char *progname)
 {
-    printf("usage: %s [--version] [--help] COMMAND [ARGS]\n"
-           "\n"
-		   "Type '%s help COMMAND' for help on a specific command.\n"
-		   "\n"
-		   "The most commonly used %s commands are:\n"
-           "   new        create a new project\n"
-           "   version    show version information\n"
-		   "\n"
-		   "Please report any issues like bugs etc. to <jesco.freund@my-universe.com>\n", 
-           progname, progname, progname);
-}
-
-void
-show_version(const char *progname)
-{
-
+	printf("usage: %s [--version] [--help] COMMAND [ARGS]\n"
+	       "\n"
+	       "Type '%s help COMMAND' for help on a specific command.\n"
+	       "\n"
+	       "The most commonly used %s commands are:\n"
+	       "   new        create a new project\n"
+	       "   version    show version information\n"
+	       "\n"
+	       "Please report any issues like bugs etc. to <jesco.freund@my-universe.com>\n", 
+	       progname, progname, progname);
 }
 
 cmd_t
 get_cmd(const char *cmd)
 {
-    if (strncmp(cmd, "new", ((strlen(cmd) > strlen("new")) ? strlen(cmd) : strlen("new")) + 1) == 0)
-        return CMD_NEW;
-    else if (strncmp(cmd, "help", ((strlen(cmd) > strlen("help")) ? strlen(cmd) : strlen("help")) + 1) == 0)
-        return CMD_HELP;
-    else if (strncmp(cmd, "--help", ((strlen(cmd) > strlen("--help")) ? strlen(cmd) : strlen("--help")) + 1) == 0)
-        return CMD_HELP;
-    else if (strncmp(cmd, "-h", ((strlen(cmd) > strlen("-h")) ? strlen(cmd) : strlen("-h")) + 1) == 0)
-        return CMD_HELP;
-    else if (strncmp(cmd, "version", ((strlen(cmd) > strlen("version")) ? strlen(cmd) : strlen("version")) + 1) == 0)
-        return CMD_VERSION;
-    else if (strncmp(cmd, "--version", ((strlen(cmd) > strlen("--version")) ? strlen(cmd) : strlen("--version")) + 1) == 0)
-        return CMD_VERSION;
-    else if (strncmp(cmd, "-v", ((strlen(cmd) > strlen("-v")) ? strlen(cmd) : strlen("-v")) + 1) == 0)
-        return CMD_VERSION;
-    else if (strncmp(cmd, "whoop", ((strlen(cmd) > strlen("whoop")) ? strlen(cmd) : strlen("whoop")) + 1) == 0)
-        return CMD_WHOOP;
-    else
-        return CMD_ILLEGAL;
+	if (strncmp(cmd, "new", ((strlen(cmd) > strlen("new")) ? strlen(cmd) : strlen("new")) + 1) == 0)
+		return CMD_NEW;
+	else if (strncmp(cmd, "help", ((strlen(cmd) > strlen("help")) ? strlen(cmd) : strlen("help")) + 1) == 0)
+		return CMD_HELP;
+	else if (strncmp(cmd, "--help", ((strlen(cmd) > strlen("--help")) ? strlen(cmd) : strlen("--help")) + 1) == 0)
+		return CMD_HELP;
+	else if (strncmp(cmd, "-h", ((strlen(cmd) > strlen("-h")) ? strlen(cmd) : strlen("-h")) + 1) == 0)
+		return CMD_HELP;
+	else if (strncmp(cmd, "version", ((strlen(cmd) > strlen("version")) ? strlen(cmd) : strlen("version")) + 1) == 0)
+		return CMD_VERSION;
+	else if (strncmp(cmd, "--version", ((strlen(cmd) > strlen("--version")) ? strlen(cmd) : strlen("--version")) + 1) == 0)
+		return CMD_VERSION;
+	else if (strncmp(cmd, "-v", ((strlen(cmd) > strlen("-v")) ? strlen(cmd) : strlen("-v")) + 1) == 0)
+		return CMD_VERSION;
+	else if (strncmp(cmd, "whoop", ((strlen(cmd) > strlen("whoop")) ? strlen(cmd) : strlen("whoop")) + 1) == 0)
+		return CMD_WHOOP;
+	else
+		return CMD_ILLEGAL;
 }
 
 int 
 main(int argc, char **argv)
 {
-    cmd_t command = CMD_ILLEGAL;
+	cmd_t command = CMD_ILLEGAL;
     
-    if (argc >= 2)
-        command = get_cmd(argv[1]);
-    
-    if (command)
-    {
-        switch(command)
-        {
+	if (argc >= 2)
+		command = get_cmd(argv[1]);
+
+	if (command)
+	{
+		switch(command)
+		{
 			case CMD_NEW:
 				if (cmd_new(argc, argv))
 					return EXIT_SUCCESS;
 				else
 					return EXIT_FAILURE;
 				break;
-            case CMD_WHOOP:
-                printf(WHOOP "\nI can do it louder than you...\n");
-                return EXIT_SUCCESS;
-                break;
-            default:
-                printf("I don't know how to do %s\n", argv[1]);
-        }
-    }
-    else
-    {
-        show_usage(basename(argv[0]));
-        return EXIT_FAILURE;
-    }
-    return EXIT_SUCCESS;
+			case CMD_VERSION:
+				if (cmd_version(argc, argv))
+					return EXIT_SUCCESS;
+				else
+					return EXIT_FAILURE;
+				break;
+			case CMD_WHOOP:
+				printf(WHOOP "\nI can do it louder than you...\n");
+				return EXIT_SUCCESS;
+				break;
+			default:
+				printf("I don't know how to do %s\n", argv[1]);
+		}
+	}
+	else
+	{
+		show_usage(basename(argv[0]));
+		return EXIT_FAILURE;
+	}
+	return EXIT_SUCCESS;
 }
 
 #if 0
