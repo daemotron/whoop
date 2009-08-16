@@ -39,11 +39,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "cli.h"
+#include "_cli.h"
 #include "config.h"
 
 extern int
-cmd_version(int argc, char * const *argv)
+_cli_cmd_version(int argc, char * const *argv)
 {
 #ifdef VERSION_ISRELEASE
 	printf("%s version %d.%d.%d\n", basename(argv[0]), VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH);

@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file whoop.c
- * @brief whoop CLI tool
+ * @file _cli.h
+ * @brief local CLI library header file
  *
  * @copyright
  * ====================================================================
@@ -33,31 +33,33 @@
  * @version $Id$
  */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <libgen.h>
-#include <string.h>
-#include <unistd.h>
+#ifndef _CLI_H_
+#define _CLI_H_
 
 #include "cli.h"
-#include "config.h"
+
+#define WHOOP "____    __    ____  __    __    ______     ______   .______    __ \n"\
+              "\\   \\  /  \\  /   / |  |  |  |  /  __  \\   /  __  \\  |   _  \\  |  |\n"\
+              " \\   \\/    \\/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  |\n"\
+              "  \\            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  |\n"\
+              "   \\    /\\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__|\n"\
+              "    \\__/  \\__/     |__|  |__|  \\______/   \\______/  |__|      (__)\n"\
 
 
-int 
-main(int argc, char **argv)
+typedef enum
 {
-	if (cli_run_command(argc, argv))
-		return EXIT_SUCCESS;
-	else
-		return EXIT_FAILURE;
-}
+    CMD_ILLEGAL,    /* must remain in the first place so it keeps assigned to zero */
+    CMD_NEW,
+	CMD_INIT,
+    CMD_HELP,
+    CMD_VERSION,
+    CMD_WHOOP,
+} cmd_t;
 
-#if 0
-____    __    ____  __    __    ______     ______   .______    __  
-\   \  /  \  /   / |  |  |  |  /  __  \   /  __  \  |   _  \  |  | 
- \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
-  \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
-   \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
-    \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
+extern int _cli_cmd_help(int argc, char * const *argv);
+extern int _cli_cmd_new(int argc, char * const *argv);
+extern int _cli_cmd_init(int argc, char * const *argv);
+extern int _cli_cmd_version(int argc, char * const *argv);
+extern cmd_t _cli_get_command(const char *cmd);
 
-#endif
+#endif /* _CLI_H_ */

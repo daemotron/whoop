@@ -39,16 +39,74 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "cli.h"
+#include "_cli.h"
+#include "config.h"
 
 extern int
-cmd_help(int argc, char * const *argv)
+_cli_cmd_help(int argc, char * const *argv)
 {
-	char *help_cmd = NULL;
-	if (argc > 1)
+	cmd_t help_cmd;
+	char *progname;
+
+	if (argc >= 1)
+		progname = basename(argv[0]);
+	else
+		progname = "whoop";
+	
+	if (argc > 2)
 	{
-		help_cmd = (char *)malloc(strlen(argv[2]) + 1);
-		strncpy(help_cmd, argv[2], strlen(argv[2]) + 1);
+		help_cmd = _cli_get_cmd(argv[2]);
+		switch (help_cmd)
+		{
+			case CMD_ILLEGAL:
+				printf("'%s': unknown command\n", argv[2]);
+				return 0;
+				break;
+			case CMD_NEW:
+				printf
+				(
+					"new: creates a new whoop project.\n"
+					"usage: new PROJECTNAME\n\n"
+					"  This will create a new directory within the current working\n"
+					"  directory named PROJECTNAME (therefore you should only use\n"
+					"  characters in PROJECTNAME that are allowed with your file system).\n\n"
+					"  Please note that chosing a PROJECTNAME identical to an already existing\n"
+					"  directory name within the current working directory will inevitably\n"
+					"  provoke a fatal error.\n\n"
+					"  Inside the freshly created directory you will find the basic framework\n"
+					"  of a Whoop application readily waiting for you to complete its code.\n\n"
+				);
+				break;
+			case CMD_INIT:
+				printf
+				(
+					"init (in): initialise a project inside the current work directory.\n"
+					"usage: init [PROJECTNAME]\n\n"
+					"  Other than the 'new' command, the init command will not create a new\n"
+					"  directory for the project, but create the project structure within\n"
+					"  the current working directory.\n\n"
+					"  If no PROJECTNAME is specified, the base name of the current working\n"
+					"  directory will be used as project name.\n\n"
+				);
+				break;
+		}
+	}
+	else
+	{
+		printf
+		(
+			"usage: %s [--version] [--help] COMMAND [ARGS]\n"
+			"\n"
+			"Type '%s help COMMAND' for help on a specific command.\n"
+			"\n"
+			"The most commonly used %s commands are:\n"
+			"   init       initialise a project in current directory\n"
+			"   new        create a new project\n"
+			"   version    show version information\n"
+			"\n"
+			"Please report any issues like bugs etc. to <jesco.freund@my-universe.com>\n",
+			progname, progname, progname
+		);
 	}
 	return 1;
 }

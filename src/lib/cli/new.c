@@ -39,10 +39,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "cli.h"
+#include "_cli.h"
+#include "config.h"
 
 extern int
-cmd_new(int argc, char * const *argv)
+_cli_cmd_new(int argc, char * const *argv)
 {
 	char *project_name = NULL;
 	project_name = (char *)malloc(strlen(argv[argc - 1]) + 1);

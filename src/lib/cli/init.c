@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file whoop.c
- * @brief whoop CLI tool
+ * @file init.c
+ * @brief whoop CLI init command
  *
  * @copyright
  * ====================================================================
@@ -39,25 +39,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "cli.h"
+#include "_cli.h"
 #include "config.h"
 
-
-int 
-main(int argc, char **argv)
+extern int
+_cli_cmd_init(int argc, char * const *argv)
 {
-	if (cli_run_command(argc, argv))
-		return EXIT_SUCCESS;
-	else
-		return EXIT_FAILURE;
+	return 1;
 }
 
-#if 0
-____    __    ____  __    __    ______     ______   .______    __  
-\   \  /  \  /   / |  |  |  |  /  __  \   /  __  \  |   _  \  |  | 
- \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
-  \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
-   \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
-    \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
-
-#endif
