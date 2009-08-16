@@ -48,12 +48,12 @@
 
 typedef enum
 {
-    CMD_ILLEGAL,    /* must remain in the first place so it keeps assigned to zero */
-    CMD_NEW,
+	CMD_ILLEGAL,    /* must remain in the first place so it keeps assigned to zero */
+	CMD_NEW,
 	CMD_INIT,
-    CMD_HELP,
-    CMD_VERSION,
-    CMD_WHOOP,
+	CMD_HELP,
+	CMD_VERSION,
+	CMD_WHOOP,
 } cmd_t;
 
 extern int _cli_cmd_help(int argc, char * const *argv);

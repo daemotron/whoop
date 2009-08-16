@@ -87,6 +87,12 @@ cli_run_command(int argc, char * const *argv)
 				else
 					return 0;
 				break;
+			case CMD_INIT:
+				if (_cli_cmd_init(argc, argv))
+					return 1;
+				else
+					return 0;
+				break;
 			case CMD_VERSION:
 				if (_cli_cmd_version(argc, argv))
 					return 1;
