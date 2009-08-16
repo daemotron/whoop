@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file whoop.h
- * @brief whoop header file
+ * @file cli.h
+ * @brief whoop CLI header file
  *
  * @copyright
  * ====================================================================
@@ -39,3 +39,4 @@
 extern int cli_run_command(int argc, char * const *argv);
 
 #endif /* CLI_H_ */
+

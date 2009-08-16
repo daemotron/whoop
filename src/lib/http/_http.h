@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file _cli.h
- * @brief local CLI library header file
+ * @file _http.h
+ * @brief local http library header file
  *
  * @copyright
  * ====================================================================
@@ -33,34 +33,12 @@
  * @version $Id$
  */
 
-#ifndef _CLI_H_
-#define _CLI_H_
+#ifndef _HTTP_H_
+#define _HTTP_H_
 
-#include "cli.h"
-
-#define WHOOP "____    __    ____  __    __    ______     ______   .______    __ \n"\
-              "\\   \\  /  \\  /   / |  |  |  |  /  __  \\   /  __  \\  |   _  \\  |  |\n"\
-              " \\   \\/    \\/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  |\n"\
-              "  \\            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  |\n"\
-              "   \\    /\\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__|\n"\
-              "    \\__/  \\__/     |__|  |__|  \\______/   \\______/  |__|      (__)\n"\
+#include "http.h"
 
 
-typedef enum
-{
-	CMD_ILLEGAL,    /* must remain in the first place so it keeps assigned to zero */
-	CMD_NEW,
-	CMD_INIT,
-	CMD_HELP,
-	CMD_VERSION,
-	CMD_WHOOP,
-} cmd_t;
 
-extern int _cli_cmd_help(int argc, char * const *argv);
-extern int _cli_cmd_new(int argc, char * const *argv);
-extern int _cli_cmd_init(int argc, char * const *argv);
-extern int _cli_cmd_version(int argc, char * const *argv);
-extern cmd_t _cli_get_command(const char *cmd);
-
-#endif /* _CLI_H_ */
+#endif /* _HTTP_H_ */
 

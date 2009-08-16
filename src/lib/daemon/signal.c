@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file _cli.h
- * @brief local CLI library header file
+ * @file signal.c
+ * @brief whoop daemon library signal handling
  *
  * @copyright
  * ====================================================================
@@ -33,34 +33,25 @@
  * @version $Id$
  */
 
-#ifndef _CLI_H_
-#define _CLI_H_
+#include <errno.h>
+#include <stdlib.h>
+#include <signal.h>
 
-#include "cli.h"
+#include "_daemon.h"
+#include "config.h"
 
-#define WHOOP "____    __    ____  __    __    ______     ______   .______    __ \n"\
-              "\\   \\  /  \\  /   / |  |  |  |  /  __  \\   /  __  \\  |   _  \\  |  |\n"\
-              " \\   \\/    \\/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  |\n"\
-              "  \\            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  |\n"\
-              "   \\    /\\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__|\n"\
-              "    \\__/  \\__/     |__|  |__|  \\______/   \\______/  |__|      (__)\n"\
-
-
-typedef enum
+extern int
+_daemon_handle_signal(int sig_no, __sighandler_t *signalhandler)
 {
-	CMD_ILLEGAL,    /* must remain in the first place so it keeps assigned to zero */
-	CMD_NEW,
-	CMD_INIT,
-	CMD_HELP,
-	CMD_VERSION,
-	CMD_WHOOP,
-} cmd_t;
+	struct sigaction action;
 
-extern int _cli_cmd_help(int argc, char * const *argv);
-extern int _cli_cmd_new(int argc, char * const *argv);
-extern int _cli_cmd_init(int argc, char * const *argv);
-extern int _cli_cmd_version(int argc, char * const *argv);
-extern cmd_t _cli_get_command(const char *cmd);
+	action.sa_handler = signalhandler;
+	sigemptyset(&action.sa_mask);
+	action.sa_flags = 0;
 
-#endif /* _CLI_H_ */
+	if (sigaction(sig_no, &action, NULL) < 0)
+		return 0;
+
+	return 1;
+}
 
