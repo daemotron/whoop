@@ -60,7 +60,7 @@ extern int _cli_cmd_help(int argc, char * const *argv);
 extern int _cli_cmd_new(int argc, char * const *argv);
 extern int _cli_cmd_init(int argc, char * const *argv);
 extern int _cli_cmd_version(int argc, char * const *argv);
-extern cmd_t _cli_get_command(const char *cmd);
+extern cmd_t _cli_get_cmd(const char *cmd);
 
 #endif /* _CLI_H_ */
 

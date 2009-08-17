@@ -58,10 +58,6 @@ _cli_cmd_help(int argc, char * const *argv)
 		help_cmd = _cli_get_cmd(argv[2]);
 		switch (help_cmd)
 		{
-			case CMD_ILLEGAL:
-				printf("'%s': unknown command\n", argv[2]);
-				return 0;
-				break;
 			case CMD_NEW:
 				printf
 				(
@@ -88,6 +84,10 @@ _cli_cmd_help(int argc, char * const *argv)
 					"  If no PROJECTNAME is specified, the base name of the current working\n"
 					"  directory will be used as project name.\n\n"
 				);
+				break;
+			default:
+				printf("'%s': unknown command\n", argv[2]);
+				return 0;
 				break;
 		}
 	}

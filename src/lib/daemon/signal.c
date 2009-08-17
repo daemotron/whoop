@@ -41,7 +41,7 @@
 #include "config.h"
 
 extern int
-_daemon_handle_signal(int sig_no, __sighandler_t *signalhandler)
+_daemon_handle_signal(int sig_no, _daemon_sighandler_t signalhandler)
 {
 	struct sigaction action;
 

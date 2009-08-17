@@ -40,7 +40,9 @@
 
 #include "daemon.h"
 
-extern int _daemon_handle_signal(int sig_no, __sighandler_t *signalhandler);
+typedef void (*_daemon_sighandler_t)(int);
+
+extern int _daemon_handle_signal(int sig_no, _daemon_sighandler_t signalhandler);
 
 #endif /* _DAEMON_H_ */
 

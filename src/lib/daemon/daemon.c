@@ -39,6 +39,8 @@
 #include <unistd.h>
 #include <signal.h>
 #include <syslog.h>
+#include <string.h>
+#include <sys/stat.h>
 
 #include "_daemon.h"
 #include "config.h"
