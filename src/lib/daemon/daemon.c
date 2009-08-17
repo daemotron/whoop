@@ -117,7 +117,7 @@ daemon_init(const char *program, int facility, const char *pidfile)
 		syslog(LOG_ERR, "Fatal error in fopen(): %s\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
-	fprintf(pid_fp, "%d", pid);
+	fprintf(pid_fp, "%d", (int)pid);
 	fclose(pid_fp);
 }
 
