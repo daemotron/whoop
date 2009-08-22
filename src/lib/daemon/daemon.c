@@ -111,13 +111,16 @@ daemon_init(const char *program, int facility, const char *pidfile)
 	umask(0);
 
 	/* write PID to pidfile */
-	pid_fp = fopen(pidfile, "w");
-	if (NULL == pid_fp)
+	if (NULL != pidfile)
 	{
-		syslog(LOG_ERR, "Fatal error in fopen(): %s\n", strerror(errno));
-		exit(EXIT_FAILURE);
+		pid_fp = fopen(pidfile, "w");
+		if (NULL == pid_fp)
+		{
+			syslog(LOG_ERR, "Fatal error in fopen(): %s\n", strerror(errno));
+			exit(EXIT_FAILURE);
+		}
+		fprintf(pid_fp, "%d", (int)getpid());
+		fclose(pid_fp);
 	}
-	fprintf(pid_fp, "%d", (int)pid);
-	fclose(pid_fp);
 }
 
