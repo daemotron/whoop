@@ -154,7 +154,7 @@ msg_log(int loglevel, const char *format, ...)
 		case MSG_FILE:
 			time(&tstmp);
 			nicetime = localtime(&tstmp);
-			strftime(tbuf, 20, "%Y-%m-%d %H:%M:%S ", nicetime);
+			strftime(tbuf, 21, "%Y-%m-%d %H:%M:%S ", nicetime);
 			snprintf(level, 15, "[%s] ", __msg_strmcap(__msg_loglevel(loglevel)));
 			message = (char *)malloc(strlen(tbuf) + strlen(level) + strlen(format) + 1);
 			memset(message, '\0', strlen(tbuf) + strlen(level) + strlen(format) + 1);
