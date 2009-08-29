@@ -1,3 +1,4 @@
+add_subdirectory(barrier)
 add_subdirectory(cli)
 add_subdirectory(daemon)
 add_subdirectory(msg)

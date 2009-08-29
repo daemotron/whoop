@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file _network.h
- * @brief local network library header file
+ * @file barrier_wait.c
+ * @brief whoop barrier library barrier_wait implementation
  *
  * @copyright
  * ====================================================================
@@ -33,22 +33,42 @@
  * @version $Id$
  */
 
-#ifndef _NETWORK_H_
-#define _NETWORK_H_
+#include <errno.h>
 
-#include "network.h"
-#include "msg.h"
+#include "_barrier.h"
+#include "config.h"
 
-#define READCBUF 512
-
-typedef struct
+extern int
+barrier_wait(barrier_t *barrier)
 {
-	int count;
-	char *current;
-	char buf[READCBUF];
-} readline_t;
+	int status, cycle;
 
-ssize_t __network_readcbuf(int filedesc, char *buf, readline_t *rl);
+	status = pthread_mutex_lock(&barrier->mutex);
+	if (0 != status)
+		return status;
 
-#endif /* _NETWORK_H_ */
+	cycle = barrier->cycle;
+
+	if (0 == --barrier->counter)
+	{
+		barrier->cycle++;
+		barrier->counter = barrier->threshold;
+
+		status = pthread_cond_broadcast(&barrier->cv);
+		if (0 == status)
+			status = BARRIER_SERIAL_THREAD;
+	}
+	else
+	{
+		while (cycle == barrier->cycle)
+		{
+			status = pthread_cond_wait(&barrier->cv, &barrier->mutex);
+			if (0 != status)
+				break;
+		}
+	}
+
+	pthread_mutex_unlock(&barrier->mutex);
+	return(status);
+}
 

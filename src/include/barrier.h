@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file _network.h
- * @brief local network library header file
+ * @file network.h
+ * @brief whoop network header file
  *
  * @copyright
  * ====================================================================
@@ -33,22 +33,23 @@
  * @version $Id$
  */
 
-#ifndef _NETWORK_H_
-#define _NETWORK_H_
+#ifndef BARRIER_H_
+#define BARRIER_H_
 
-#include "network.h"
-#include "msg.h"
+#include <pthread.h>
 
-#define READCBUF 512
-
-typedef struct
+typedef struct barrier
 {
-	int count;
-	char *current;
-	char buf[READCBUF];
-} readline_t;
+	pthread_mutex_t mutex;
+	pthread_cond_t cv;
+	int threshold;
+	int counter;
+	unsigned long cycle;
+} barrier_t;
 
-ssize_t __network_readcbuf(int filedesc, char *buf, readline_t *rl);
+extern int barrier_init(barrier_t *barrier, unsigned count);
+extern int barrier_destroy(barrier_t *barrier);
+extern int barrier_wait(barrier_t *barrier);
 
-#endif /* _NETWORK_H_ */
+#endif /* BARRIER_H_ */
 

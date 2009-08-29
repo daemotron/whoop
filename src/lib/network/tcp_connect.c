@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file tcp_listen.c
- * @brief whoop network library tcp_listen implementation
+ * @file tcp_connect.c
+ * @brief whoop network library tcp_connect implementation
  *
  * @copyright
  * ====================================================================
@@ -44,37 +44,32 @@
 #include "config.h"
 
 extern int
-network_tcp_listen(const char *nodename, const char *servname, int backlog)
+network_tcp_connect(const char *nodename, const char *servname)
 {
-	int sd, reuseaddr, status;
+	int sd, status;
 	struct addrinfo hints, *ai, *aptr;
 
 	/* init hints address structure */
 	memset(&hints, 0, sizeof(hints));
-	hints.ai_flags = AI_PASSIVE;
-	hints.ai_family = AF_UNSPEC;		/* works with both, IPv4 and IPv6 */
-	hints.ai_socktype = SOCK_STREAM;	/* the function's called _tcp_... - ain't it? */
+	hints.ai_family = AF_UNSPEC;			/* works with both, IPv4 and IPv6 */
+	hints.ai_socktype = SOCK_STREAM;		/* the function's called _tcp_... - ain't it? */
 
-	/* determine address structure for passive socket */
+	/* determine address structure for active socket */
 	if (0 == (status = getaddrinfo(nodename, servname, &hints, &ai)))
 	{
 		for (aptr = ai; NULL != aptr; aptr = aptr->ai_next)
 		{
 			if (0 > (sd = socket(aptr->ai_family, aptr->ai_socktype, aptr->ai_protocol)))
-				continue;	/* in case of error try next address structure */
+				continue;					/* in case of error try next address structure */
 
-			/* try to avoid "address already in use" errors */
-			reuseaddr = 1;
-			setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(int));
+			/* connect socket to socket address */
+			if (0 > (connect(sd, aptr->ai_addr, aptr->ai_addrlen)))
+			{
+				close(sd);
+				continue;					/* in case of error try next address structure */
+			}
 
-			/* finally, bind socket */
-			if (0 == (bind(sd, aptr->ai_addr, aptr->ai_addrlen)))
-				/* convert socket from active to passive */
-				if (0 <= (listen(sd, backlog)))
-					break;	/* if everything's fine, get out of the loop */
-
-			/* in case of error, close the socket */
-			close(sd);
+			break;							/* if everything's fine, get out of the loop */
 		}
 
 		freeaddrinfo(ai);
@@ -82,7 +77,7 @@ network_tcp_listen(const char *nodename, const char *servname, int backlog)
 		/* check for errors */
 		if (NULL == aptr)
 		{
-			msg_log(LOG_ERR, "Can't listen on port %s: %s\n", servname, strerror(errno));
+			msg_log(LOG_ERR, "Cannot connect to %s, port %s: %s\n", nodename, servname, strerror(errno));
 			return(-1);
 		}
 	}

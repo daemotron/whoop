@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file _network.h
- * @brief local network library header file
+ * @file readline.c
+ * @brief whoop network library readline implementation
  *
  * @copyright
  * ====================================================================
@@ -33,22 +33,70 @@
  * @version $Id$
  */
 
-#ifndef _NETWORK_H_
-#define _NETWORK_H_
+#include <errno.h>
+#include <stdlib.h>
 
-#include "network.h"
-#include "msg.h"
+#include "_network.h"
+#include "config.h"
 
-#define READCBUF 512
-
-typedef struct
+extern ssize_t
+network_readline(int filedesc, void *buf, size_t nbyte, void **help)
 {
-	int count;
-	char *current;
-	char buf[READCBUF];
-} readline_t;
+	size_t n;
+	ssize_t br;
+	char c = 0;
+	char *ptr = buf;
+	readline_t *rl = *help;
 
-ssize_t __network_readcbuf(int filedesc, char *buf, readline_t *rl);
+	if (NULL == rl)
+	{
+		if (NULL == (rl = malloc(sizeof(readline_t))))
+			return(-1);
+		rl->count = 0;
+		rl->current = rl->buf;
+		*help = rl;
+	}
 
-#endif /* _NETWORK_H_ */
+	for (n = 1; n < nbyte; n++)
+	{
+		if (0 > (br = __network_readcbuf(filedesc, &c, rl)))
+			return(-1);
+
+		*ptr++ = c;
+
+		if ((0 == br) || ('\n' == c))
+			break;
+	}
+
+	if ((0 == br) && (1 == n))
+		return(0);
+
+	*ptr = 0;
+	return(n);
+}
+
+
+ssize_t
+__network_readcbuf(int filedesc, char *buf, readline_t *rl)
+{
+	while (rl->count < 1)
+	{
+		if (0 > (rl->count = read(filedesc, rl->buf, sizeof(rl->buf))))
+		{
+			if (EINTR == errno)
+				rl->count = 0;
+			else
+				return(-1);
+		}
+		else if (0 == rl->count)
+			return(0);
+
+		rl->current = rl->buf;
+	}
+
+	*buf = *rl->current++;
+	rl->count--;
+
+	return(1);
+}
 

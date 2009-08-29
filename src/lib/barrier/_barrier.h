@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file _network.h
- * @brief local network library header file
+ * @file _barrier.h
+ * @brief local barrier library header file
  *
  * @copyright
  * ====================================================================
@@ -33,22 +33,13 @@
  * @version $Id$
  */
 
-#ifndef _NETWORK_H_
-#define _NETWORK_H_
+#ifndef _BARRIER_H_
+#define _BARRIER_H_
 
-#include "network.h"
+#include "barrier.h"
 #include "msg.h"
 
-#define READCBUF 512
+#define BARRIER_SERIAL_THREAD -2
 
-typedef struct
-{
-	int count;
-	char *current;
-	char buf[READCBUF];
-} readline_t;
-
-ssize_t __network_readcbuf(int filedesc, char *buf, readline_t *rl);
-
-#endif /* _NETWORK_H_ */
+#endif /* _BARRIER_H_ */
 

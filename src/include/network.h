@@ -36,7 +36,11 @@
 #ifndef NETWORK_H_
 #define NETWORK_H_
 
-#include <stdlib.h>
+#include <unistd.h>
+
+extern int network_tcp_connect(const char *nodename, const char *servname);
+extern int network_tcp_listen(const char *nodename, const char *servname, int backlog);
+extern ssize_t network_readline(int filedesc, void *buf, size_t nbyte, void **help);
 
 #endif /* NETWORK_H_ */
 
