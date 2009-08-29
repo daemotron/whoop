@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file _http.h
- * @brief local http library header file
+ * @file network.h
+ * @brief whoop network header file
  *
  * @copyright
  * ====================================================================
@@ -33,12 +33,10 @@
  * @version $Id$
  */
 
-#ifndef _HTTP_H_
-#define _HTTP_H_
+#ifndef NETWORK_H_
+#define NETWORK_H_
 
-#include "http.h"
-#include "msg.h"
+#include <stdlib.h>
 
-
-#endif /* _HTTP_H_ */
+#endif /* NETWORK_H_ */
 

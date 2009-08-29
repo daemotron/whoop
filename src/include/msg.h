@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file _http.h
- * @brief local http library header file
+ * @file msg.h
+ * @brief whoop msg header file
  *
  * @copyright
  * ====================================================================
@@ -33,12 +33,22 @@
  * @version $Id$
  */
 
-#ifndef _HTTP_H_
-#define _HTTP_H_
+#ifndef MSG_H_
+#define MSG_H_
 
-#include "http.h"
-#include "msg.h"
+#include <syslog.h>
 
+typedef enum
+{
+	MSG_NONE,
+	MSG_SYSLOG,
+	MSG_FILE,
+	MSG_TERM,
+} msg_dest_t;
 
-#endif /* _HTTP_H_ */
+extern int msg_open(msg_dest_t dest, const char *target, int flag, int facility);
+extern void msg_close(void);
+extern void msg_log(int loglevel, const char *format, ...);
+
+#endif /* MSG_H_ */
 

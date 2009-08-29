@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file _http.h
- * @brief local http library header file
+ * @file _msg.h
+ * @brief local msg library header file
  *
  * @copyright
  * ====================================================================
@@ -33,12 +33,15 @@
  * @version $Id$
  */
 
-#ifndef _HTTP_H_
-#define _HTTP_H_
+#ifndef _MSG_H
+#define _MSG_H_
 
-#include "http.h"
+#define SYSLOG_NAMES 1
+#include <syslog.h>
+#undef SYSLOG_NAMES
+
 #include "msg.h"
 
 
-#endif /* _HTTP_H_ */
+#endif /* _MSG_H_ */
 

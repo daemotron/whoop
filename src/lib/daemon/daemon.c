@@ -58,7 +58,7 @@ daemon_init(const char *program, int facility, const char *pidfile)
 	{
 		if (!_daemon_handle_signal(sigs[i], SIG_IGN))
 		{
-			fprintf(stderr, "%s: Fatal error in daemon_init(): %s\n", program, strerror(errno));
+			msg_log(LOG_ERR, "Fatal error in daemon_init(): %s\n", strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 	}
@@ -67,11 +67,12 @@ daemon_init(const char *program, int facility, const char *pidfile)
 	switch (pid = fork())
 	{
 		case -1:
-			fprintf(stderr, "%s: Fatal error in fork(): %s\n", program, strerror(errno));
+			msg_log(LOG_ERR, "Fatal error in fork(): %s\n", strerror(errno));
 			exit(EXIT_FAILURE);
 			break;
 		case 0:
-			openlog(program, LOG_PID, facility);
+			msg_close();
+			msg_open(MSG_SYSLOG, program, LOG_PID, facility);
 			break;
 		default:
 			exit(EXIT_SUCCESS);
@@ -81,7 +82,7 @@ daemon_init(const char *program, int facility, const char *pidfile)
 	/* get rid of the associated terminal */
 	if (setsid() < 0)
 	{
-		syslog(LOG_ERR, "Fatal error in setsid(): %s\n", strerror(errno));
+		msg_log(LOG_ERR, "Fatal error in setsid(): %s\n", strerror(errno));
 		exit(EXIT_FAILURE);
 	}
 
@@ -89,7 +90,7 @@ daemon_init(const char *program, int facility, const char *pidfile)
 	switch (pid = fork())
 	{
 		case -1:
-			syslog(LOG_ERR, "Fatal error in fork(): %s\n", strerror(errno));
+			msg_log(LOG_ERR, "Fatal error in fork(): %s\n", strerror(errno));
 			exit(EXIT_FAILURE);
 			break;
 		case 0:
@@ -116,7 +117,7 @@ daemon_init(const char *program, int facility, const char *pidfile)
 		pid_fp = fopen(pidfile, "w");
 		if (NULL == pid_fp)
 		{
-			syslog(LOG_ERR, "Fatal error in fopen(): %s\n", strerror(errno));
+			msg_log(LOG_ERR, "Fatal error in fopen(): %s\n", strerror(errno));
 			exit(EXIT_FAILURE);
 		}
 		fprintf(pid_fp, "%d", (int)getpid());

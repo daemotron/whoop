@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file _http.h
- * @brief local http library header file
+ * @file _network.h
+ * @brief local network library header file
  *
  * @copyright
  * ====================================================================
@@ -33,12 +33,12 @@
  * @version $Id$
  */
 
-#ifndef _HTTP_H_
-#define _HTTP_H_
+#ifndef _NETWORK_H_
+#define _NETWORK_H_
 
-#include "http.h"
+#include "network.h"
 #include "msg.h"
 
 
-#endif /* _HTTP_H_ */
+#endif /* _NETWORK_H_ */
 

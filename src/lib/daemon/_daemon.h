@@ -39,6 +39,7 @@
 #include <signal.h>
 
 #include "daemon.h"
+#include "msg.h"
 
 typedef void (*_daemon_sighandler_t)(int);
 
