@@ -43,6 +43,29 @@
 #include "daemon.h"
 #include "config.h"
 
+void
+show_usage(int argc, char * const *argv)
+{
+	char *progname;
+
+	if (argc >= 1)
+		progname = basename(argv[0]);
+	else
+		progname = "daemon-test";
+
+	printf
+	(
+		"usage: %s [-h] [-s <delay>] [-p <pidfile>]\n"
+		"\n"
+		"   -h             show this help and exit\n"
+		"   -p <pidfile>   write daemon PID to the specified file\n"
+		"   -s <delay>     let the test daemon run for <delay> seconds\n"
+		"\n"
+		"Please report any issues like bugs etc. to <jesco.freund@my-universe.com>\n",
+		progname
+	);
+}
+
 
 int 
 main(int argc, char **argv)
@@ -50,11 +73,16 @@ main(int argc, char **argv)
 	int c;
 	char *pidfile = NULL;
 	char cwd[1024] = { '\0' };
+	int delay = 0;
 
-	while ((c = getopt(argc, argv, "p:")) != -1)
+	while ((c = getopt(argc, argv, "hp:s:")) != -1)
 	{
 		switch(c)
 		{
+			case 'h':
+				show_usage(argc, argv);
+				return(EXIT_SUCCESS);
+				break;
 			case 'p':
 				if ((NULL != optarg) && (strlen(optarg) > 0) && (optarg[0] != '/'))
 				{
@@ -69,6 +97,9 @@ main(int argc, char **argv)
 					pidfile = optarg;
 				}
 				break;
+			case 's':
+				if (NULL != optarg)
+					delay = atoi(optarg);
 		}
 	}
 
@@ -84,6 +115,8 @@ main(int argc, char **argv)
 	daemon_init(basename(argv[0]), LOG_LOCAL0, pidfile);
 
 	syslog(LOG_DEBUG, "Daemonized with daemon PID %d.", (int)getpid());
+
+	sleep(delay);
 
 	return(EXIT_SUCCESS);
 }
