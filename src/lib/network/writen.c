@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file network.h
- * @brief whoop network header file
+ * @file writen.c
+ * @brief whoop network library writen implementation
  *
  * @copyright
  * ====================================================================
@@ -33,16 +33,31 @@
  * @version $Id$
  */
 
-#ifndef NETWORK_H_
-#define NETWORK_H_
+#include <errno.h>
 
-#include <unistd.h>
+#include "_network.h"
+#include "config.h"
 
-extern int network_tcp_connect(const char *nodename, const char *servname);
-extern int network_tcp_listen(const char *nodename, const char *servname, int backlog);
-extern ssize_t network_readline(int filedesc, void *buf, size_t nbyte, void **help);
-extern ssize_t network_readn(int filedesc, void *buf, size_t nbyte);
-extern ssize_t network_writen(int filedesc, const void *buf, size_t nbyte);
+extern ssize_t
+network_writen(int filedesc, const void *buf, size_t nbyte)
+{
+	size_t n;
+	ssize_t bw;
+	char *ptr = (char *)buf;
 
-#endif /* NETWORK_H_ */
+	for (n = nbyte; n > 0; n -= bw, ptr += bw)
+	{
+		if (0 > (bw = write(filedesc, ptr, n)))
+		{
+			if (EINTR == errno)
+				bw = 0;
+			else
+				return(-1);
+		}
+		else if (0 == bw)
+			return(nbyte - n);
+	}
+	
+	return nbyte;
+}
 

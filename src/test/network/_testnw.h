@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
  *
- * @file network.h
- * @brief whoop network header file
+ * @file _testnw.h
+ * @brief local network test header file
  *
  * @copyright
  * ====================================================================
@@ -33,16 +33,14 @@
  * @version $Id$
  */
 
-#ifndef NETWORK_H_
-#define NETWORK_H_
+#ifndef _TESTNW_H_
+#define _TESTNW_H_
 
-#include <unistd.h>
+#define MAXLINE 512
+#define BACKLOG 32
 
-extern int network_tcp_connect(const char *nodename, const char *servname);
-extern int network_tcp_listen(const char *nodename, const char *servname, int backlog);
-extern ssize_t network_readline(int filedesc, void *buf, size_t nbyte, void **help);
-extern ssize_t network_readn(int filedesc, void *buf, size_t nbyte);
-extern ssize_t network_writen(int filedesc, const void *buf, size_t nbyte);
+#define NUM_PROCS 8
+#define NUM_THREADS 8
 
-#endif /* NETWORK_H_ */
+#endif /* _TESTNW_H_ */
 
