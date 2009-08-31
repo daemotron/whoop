@@ -49,7 +49,7 @@ msg_dest_t __msg_dest;
 char *
 __msg_loglevel(int loglevel)
 {
-	CODE *n = prioritynames;
+	msg_code_t *n = msg_prioritynames;
 	while ((n->c_name) && (n->c_val != loglevel))
 		n++;
 
@@ -86,10 +86,12 @@ msg_open(msg_dest_t dest, const char *target, int flag, int facility)
 {
 	switch (dest)
 	{
+#ifdef HAVE_SYSLOG_H
 		case MSG_SYSLOG:
 			openlog(target, flag, facility);
 			__msg_dest = dest;
 			break;
+#endif
 		case MSG_FILE:
 			if (__msg_fptr && (__msg_fptr != stderr) && (__msg_fptr != stdout))
 				fclose(__msg_fptr);
@@ -118,10 +120,12 @@ msg_close(void)
 {
 	switch(__msg_dest)
 	{
+#ifdef HAVE_SYSLOG_H
 		case MSG_SYSLOG:
 			closelog();
 			__msg_dest = MSG_NONE;
 			break;
+#endif
 		case MSG_FILE:
 			if (__msg_fptr && (__msg_fptr != stderr) && (__msg_fptr != stdout))
 				fclose(__msg_fptr);
@@ -148,9 +152,11 @@ msg_log(int loglevel, const char *format, ...)
 	va_start(vargptr, format);
 	switch (__msg_dest)
 	{
+#ifdef HAVE_SYSLOG_H
 		case MSG_SYSLOG:
 			vsyslog(loglevel, format, vargptr);
 			break;
+#endif
 		case MSG_FILE:
 			time(&tstmp);
 			nicetime = localtime(&tstmp);

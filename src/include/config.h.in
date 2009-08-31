@@ -43,7 +43,18 @@
 /* #define VERSION_ISRELEASE */
 #define VERSION_BRANCH "master"
 
-/* cmake detected stuff */
+/* check for header files */
+#cmakedefine HAVE_SYSLOG_H
 #cmakedefine HAVE_OPENSSL_H
+
+/* check for symbols */
+#cmakedefine HAVE_LOG_EMERG_S
+#cmakedefine HAVE_LOG_ALERT_S
+#cmakedefine HAVE_LOG_CRIT_S
+#cmakedefine HAVE_LOG_ERR_S
+#cmakedefine HAVE_LOG_WARNING_S
+#cmakedefine HAVE_LOG_NOTICE_S
+#cmakedefine HAVE_LOG_INFO_S
+#cmakedefine HAVE_LOG_DEBUG_S
 
 #endif /* CONFIG_H_ */

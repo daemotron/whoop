@@ -36,12 +36,9 @@
 #ifndef _MSG_H
 #define _MSG_H_
 
-#define SYSLOG_NAMES 1
-#include <syslog.h>
-#undef SYSLOG_NAMES
-
+#define MSG_NAMES
 #include "msg.h"
-
+#undef MSG_NAMES
 
 #endif /* _MSG_H_ */
 

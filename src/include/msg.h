@@ -36,12 +36,66 @@
 #ifndef MSG_H_
 #define MSG_H_
 
+#include "config.h"
+
+#ifdef HAVE_SYSLOG_H
 #include <syslog.h>
+#else
+#define LOG_EMERG       0       /* system is unusable */
+#define LOG_ALERT       1       /* action must be taken immediately */
+#define LOG_CRIT        2       /* critical conditions */
+#define LOG_ERR         3       /* error conditions */
+#define LOG_WARNING     4       /* warning conditions */
+#define LOG_NOTICE      5       /* normal but significant condition */
+#define LOG_INFO        6       /* informational */
+#define LOG_DEBUG       7       /* debug-level messages */
+#endif /* HAVE_SYSLOG_H */
+
+#ifdef MSG_NAMES
+
+typedef struct
+{
+	char *c_name;
+	int c_val;
+} msg_code_t;
+
+msg_code_t msg_prioritynames[] =
+{
+#ifdef LOG_EMERG
+	{ "emerg", LOG_EMERG,      },
+#endif
+#ifdef LOG_ALERT
+	{ "alert", LOG_ALERT,      },
+#endif
+#ifdef LOG_CRIT
+	{ "crit ", LOG_CRIT,       },
+#endif
+#ifdef LOG_ERR
+	{ "error", LOG_ERR,        },
+#endif
+#ifdef LOG_WARNING
+	{ "warn ", LOG_WARNING,    },
+#endif
+#ifdef LOG_NOTICE
+	{ "note ", LOG_NOTICE,     },
+#endif
+#ifdef LOG_INFO
+	{ "info ", LOG_INFO,       },
+#endif
+#ifdef LOG_DEBUG
+	{ "debug", LOG_DEBUG,      },
+#endif
+	{ NULL, -1,                }
+};
+
+#endif /* MSG_NAMES */
 
 typedef enum
 {
 	MSG_NONE,
+#ifdef HAVE_SYSLOG_H
 	MSG_SYSLOG,
+#endif
 	MSG_FILE,
 	MSG_TERM,
 } msg_dest_t;
