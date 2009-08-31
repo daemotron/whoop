@@ -69,8 +69,10 @@ show_usage(int argc, char * const *argv)
 		"\n"
 		"   -h             show this help and exit\n"
 		"   -f <pidfile>   write server PID to specified file\n"
+		"   -g <group>     set gid to specified group\n"
 		"   -l <logfile>   write test log to specified file\n"
 		"   -p <port>      listen on specified tcp port\n"
+		"   -u <user>      change process uid to specified user\n"
 		"   -w <worker>    number of worker threads\n"
 		"\n"
 		"Please report any issues like bugs etc. to <jesco.freund@my-universe.com>\n",
@@ -131,11 +133,13 @@ main(int argc, char **argv)
 	char *logfile = NULL;
 	char *pidfile = NULL;
 	char *srv_port = NULL;
+	char *username = NULL;
+	char *groupname = NULL;
 	char cwd[1024] = { '\0' };
 	sigset_t sigset;
 	pthread_t tid;
 
-	while ((c = getopt(argc, argv, "f:hl:p:w:")) != -1)
+	while ((c = getopt(argc, argv, "f:g:hl:p:u:w:")) != -1)
 	{
 		switch (c)
 		{
@@ -152,6 +156,10 @@ main(int argc, char **argv)
 				{   
 					pidfile = optarg;
 				}
+				break;
+			case 'g':
+				if (NULL != optarg)
+					groupname = optarg;
 				break;
 			case 'h':
 				show_usage(argc, argv);
@@ -174,6 +182,10 @@ main(int argc, char **argv)
 			case 'p':
 				if (NULL != optarg)
 					srv_port = optarg;
+				break;
+			case 'u':
+				if (NULL != optarg)
+					username = optarg;
 				break;
 			case 'w':
 				if (NULL != optarg)
@@ -218,9 +230,9 @@ main(int argc, char **argv)
 
 	/* daemonize */
 	if (NULL == logfile)
-		daemon_init(MSG_SYSLOG, basename(argv[0]), LOG_LOCAL0, pidfile);
+		daemon_init(MSG_SYSLOG, basename(argv[0]), LOG_LOCAL0, pidfile, username, groupname);
 	else
-		daemon_init(MSG_FILE, logfile, 0, pidfile);
+		daemon_init(MSG_FILE, logfile, 0, pidfile, username, groupname);
 
 	init_srv_stats();
 

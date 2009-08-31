@@ -112,7 +112,7 @@ main(int argc, char **argv)
 	else
 		syslog(LOG_DEBUG, "Daemonizing without PID file.");
 
-	daemon_init(MSG_SYSLOG, basename(argv[0]), LOG_LOCAL0, pidfile);
+	daemon_init(MSG_SYSLOG, basename(argv[0]), LOG_LOCAL0, pidfile, NULL, NULL);
 
 	syslog(LOG_DEBUG, "Daemonized with daemon PID %d.", (int)getpid());
 

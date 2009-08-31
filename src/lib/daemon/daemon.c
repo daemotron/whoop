@@ -34,6 +34,8 @@
  */
 
 #include <errno.h>
+#include <grp.h>
+#include <pwd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -46,12 +48,14 @@
 #include "config.h"
 
 extern void
-daemon_init(msg_dest_t log_dest, const char *program, int facility, const char *pidfile)
+daemon_init(msg_dest_t log_dest, const char *program, int facility, const char *pidfile, const char *username, const char *groupname)
 {
 	pid_t pid;
 	int i;
 	FILE *pid_fp;
 	int sigs[] = { SIGHUP, SIGINT, SIGQUIT, SIGTSTP, SIGTTIN, SIGTTOU };
+	struct passwd *pw;
+	struct group *grp;
 
 	/* make sure all those nice signals are going to be ignored */
 	for (i = 0; i < sizeof(sigs) / sizeof(int); i++)
@@ -122,6 +126,25 @@ daemon_init(msg_dest_t log_dest, const char *program, int facility, const char *
 		}
 		fprintf(pid_fp, "%d", (int)getpid());
 		fclose(pid_fp);
+	}
+
+	/* change user and group id */
+	if (NULL != groupname)
+	{   
+		grp = getgrnam(groupname);      /* using a non-threadsafe function is ok here */
+		if (0 != setgid(grp->gr_gid))
+			msg_log(LOG_WARNING, "Unable to change GID to %d (%s): %s\n", (int)grp->gr_gid, groupname, strerror(errno));
+		else
+			msg_log(LOG_INFO, "Changed GID to %d (%s)\n", (int)grp->gr_gid, groupname);
+	}
+
+	if (NULL != username)
+	{
+		pw = getpwnam(username);		/* using a non-threadsafe function is ok here */
+		if  (0 != setuid(pw->pw_uid))
+			msg_log(LOG_WARNING, "Unable to change UID to %d (%s): %s\n", (int)pw->pw_uid, username, strerror(errno));
+		else
+			msg_log(LOG_INFO, "Changed UID to %d (%s)\n", (int)pw->pw_uid, username);
 	}
 }
 

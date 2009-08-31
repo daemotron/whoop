@@ -38,7 +38,7 @@
 
 #include "msg.h"
 
-extern void daemon_init(msg_dest_t log_dest, const char *program, int facility, const char *pidfile);
+extern void daemon_init(msg_dest_t log_dest, const char *program, int facility, const char *pidfile, const char *username, const char *groupname);
 
 #endif /* DAEMON_H_ */
 
