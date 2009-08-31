@@ -46,7 +46,9 @@
 extern int
 network_tcp_listen(const char *nodename, const char *servname, int backlog)
 {
-	int sd, reuseaddr, status;
+	int sd = 0;
+	int reuseaddr = 0;
+	int status = 0;
 	struct addrinfo hints, *ai, *aptr;
 
 	/* init hints address structure */

@@ -46,7 +46,8 @@
 extern int
 network_tcp_connect(const char *nodename, const char *servname)
 {
-	int sd, status;
+	int sd = 0;
+	int status = 0;
 	struct addrinfo hints, *ai, *aptr;
 
 	/* init hints address structure */

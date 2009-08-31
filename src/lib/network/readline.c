@@ -42,8 +42,8 @@
 extern ssize_t
 network_readline(int filedesc, void *buf, size_t nbyte, void **help)
 {
-	size_t n;
-	ssize_t br;
+	size_t n = 0;
+	ssize_t br = 0;
 	char c = 0;
 	char *ptr = buf;
 	readline_t *rl = *help;
