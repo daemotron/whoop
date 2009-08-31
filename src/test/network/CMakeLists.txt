@@ -12,6 +12,9 @@ link_directories(
 	${whoop_SOURCE_DIR}/src/lib/network
 )
 
+# A Solaris lullaby
+add_definitions(-D_POSIX_PTHREAD_SEMANTICS)
+
 add_executable(test-server test-server.c handle-client.c srv-stats.c)
 add_executable(test-client test-client.c)
 
