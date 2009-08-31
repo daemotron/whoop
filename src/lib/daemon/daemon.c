@@ -46,7 +46,7 @@
 #include "config.h"
 
 extern void
-daemon_init(const char *program, int facility, const char *pidfile)
+daemon_init(msg_dest_t log_dest, const char *program, int facility, const char *pidfile)
 {
 	pid_t pid;
 	int i;
@@ -72,7 +72,7 @@ daemon_init(const char *program, int facility, const char *pidfile)
 			break;
 		case 0:
 			msg_close();
-			msg_open(MSG_SYSLOG, program, LOG_PID, facility);
+			msg_open(log_dest, program, LOG_PID, facility);
 			break;
 		default:
 			exit(EXIT_SUCCESS);

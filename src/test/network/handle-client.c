@@ -6,8 +6,8 @@
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
  *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file daemon-test.c
- * @brief whoop daemon library test tool
+ * @file handle-client.c
+ * @brief whoop test server client handler
  *
  * @copyright
  * ====================================================================
@@ -33,92 +33,97 @@
  * @version $Id$
  */
 
-#include <stdio.h>
+#include <errno.h>
 #include <stdlib.h>
-#include <libgen.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
-#include <syslog.h>
 
-#include "daemon.h"
+#include "msg.h"
+#include "network.h"
 #include "config.h"
 
+#include "_testnw.h"
+
 void
-show_usage(int argc, char * const *argv)
+eratosthenes(int num)
 {
-	char *progname;
+	int i, j;
+	char *np;
 
-	if (argc >= 1)
-		progname = basename(argv[0]);
-	else
-		progname = "daemon-test";
+	if (NULL == (np = (char *)calloc(num + 1, sizeof(char))))
+	{
+		msg_log(LOG_ERR, "Memory allocation failed: %s\n", strerror(errno));
+		return;
+	}
 
-	printf
-	(
-		"usage: %s [-h] [-s <delay>] [-p <pidfile>]\n"
-		"\n"
-		"   -h             show this help and exit\n"
-		"   -p <pidfile>   write daemon PID to the specified file\n"
-		"   -s <delay>     let the test daemon run for <delay> seconds\n"
-		"\n"
-		"Please report any issues like bugs etc. to <jesco.freund@my-universe.com>\n",
-		progname
-	);
+	for (i = 2; i <= num / 2; i++)
+		for (j = 2; j <= num / i; j++)
+			np[i*j] = 1;
+
+	/* this is only a dummy function to generate some CPU load
+	   ==> we throw the result away ;) */
+	free(np);
+	return;
 }
 
-
-int 
-main(int argc, char **argv)
+void
+handle_client(int client)
 {
-	int c;
-	char *pidfile = NULL;
-	char cwd[1024] = { '\0' };
-	int delay = 0;
+	int br = 0, bs = 0, num_work = 0, num_bytes = 0;
+	void *rl = NULL;
+	char req[MAXLINE] = { '\0' };
+	char *st = NULL, *data = NULL;
 
-	while ((c = getopt(argc, argv, "hp:s:")) != -1)
+	/* send greeting to client */
+	num_bytes = strlen(HELLO);
+	if (network_writen(client, HELLO, num_bytes) != num_bytes)
 	{
-		switch(c)
+		msg_log(LOG_ERR, "Writing to client failed: %s\n", strerror(errno));
+		return;
+	}
+
+	for (;;)
+	{
+		/* read request from client */
+		if (1 > (br = network_readline(client, req, MAXLINE, &rl)))
 		{
-			case 'h':
-				show_usage(argc, argv);
-				return(EXIT_SUCCESS);
-				break;
-			case 'p':
-				if ((NULL != optarg) && (strlen(optarg) > 0) && (optarg[0] != '/'))
-				{
-					getcwd(cwd, 1024);
-					pidfile = (char *)malloc(strlen(cwd) + strlen(optarg) + 2);
-					strncpy(pidfile, cwd, strlen(cwd) + 1);
-					strncat(pidfile, "/", 2);
-					strncat(pidfile, optarg, strlen(optarg) + 1);
-				}
-				else
-				{
-					pidfile = optarg;
-				}
-				break;
-			case 's':
-				if (NULL != optarg)
-					delay = atoi(optarg);
+			/* in case of EOF or error */
+			break;
+		}
+
+		num_work = num_bytes = 0;
+		if (NULL != (data = strtok_r(req, " ", &st)))
+			num_work = atoi(data);
+		if (NULL != (data = strtok_r(NULL, " \r\n", &st)))
+			num_bytes = atoi(data);
+
+		if ((0 >= num_work) || (0 >= num_bytes))
+		{
+			msg_log(LOG_ERR, "Received invalid client request.\n");
+			break;
+		}
+
+		if (NULL == (data = (char *)malloc(num_bytes)))
+		{
+			msg_log(LOG_ERR, "Memory allocation failed: %s\n", strerror(errno));
+			break;
+		}
+
+		eratosthenes(num_work);
+
+		bs = network_writen(client, data, num_bytes);
+		free(data);
+
+		if (bs != num_bytes)
+		{
+			msg_log(LOG_ERR, "Writing to client failed: %s\n", strerror(errno));
+			break;
 		}
 	}
 
-
-	openlog(basename(argv[0]), LOG_PID, LOG_LOCAL0);
-	syslog(LOG_DEBUG, "Started with original PID %d.", (int)getpid());
-
-	if (NULL != pidfile)
-		syslog(LOG_DEBUG, "Daemonizing with PID file %s", pidfile);
-	else
-		syslog(LOG_DEBUG, "Daemonizing without PID file.");
-
-	daemon_init(MSG_SYSLOG, basename(argv[0]), LOG_LOCAL0, pidfile);
-
-	syslog(LOG_DEBUG, "Daemonized with daemon PID %d.", (int)getpid());
-
-	sleep(delay);
-
-	return(EXIT_SUCCESS);
+	free(rl);
+	return;
 }
 
 #if 0
@@ -130,3 +135,4 @@ ____    __    ____  __    __    ______     ______   .______    __
     \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
 
 #endif
+

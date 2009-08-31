@@ -36,7 +36,9 @@
 #ifndef DAEMON_H_
 #define DAEMON_H_
 
-extern void daemon_init(const char *program, int facility, const char *pidfile);
+#include "msg.h"
+
+extern void daemon_init(msg_dest_t log_dest, const char *program, int facility, const char *pidfile);
 
 #endif /* DAEMON_H_ */
 

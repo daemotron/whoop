@@ -4,10 +4,10 @@
  *   \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
  *    \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
  *     \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
- *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)
+ *      \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
  *
- * @file _testnw.h
- * @brief local network test header file
+ * @file handle-client.c
+ * @brief whoop test server client handler
  *
  * @copyright
  * ====================================================================
@@ -33,21 +33,49 @@
  * @version $Id$
  */
 
-#ifndef _TESTNW_H_
-#define _TESTNW_H_
+#include <sys/times.h>
 
-#define MAXLINE 512
-#define BACKLOG 32
+#include "msg.h"
+#include "network.h"
+#include "config.h"
 
-#define NUM_PROCS 8
-#define NUM_THREADS 8
+#include "_testnw.h"
 
-#define HELLO "Hello, this is the Whoop Test Server.\n"
+struct tms start_acct;
 
-void eratosthenes(int num);
-void handle_client(int client);
-void init_srv_stats(void);
-void print_srv_stats(void);
+void
+init_srv_stats(void)
+{
+	times(&start_acct);
+	return;
+}
 
-#endif /* _TESTNW_H_ */
+void
+print_srv_stats(void)
+{
+	struct tms end_acct;
+
+	times(&end_acct);
+
+	msg_log
+	(
+		LOG_INFO, "CPU-Info: %d\n", 
+		(int)(end_acct.tms_utime - start_acct.tms_utime) +
+		(int)(end_acct.tms_stime - start_acct.tms_stime) +
+		(int)(end_acct.tms_cutime - start_acct.tms_cutime) +
+		(int)(end_acct.tms_cstime - start_acct.tms_cstime)
+	);
+
+	return;
+}
+
+#if 0
+____    __    ____  __    __    ______     ______   .______    __  
+\   \  /  \  /   / |  |  |  |  /  __  \   /  __  \  |   _  \  |  | 
+ \   \/    \/   /  |  |__|  | |  |  |  | |  |  |  | |  |_)  | |  | 
+  \            /   |   __   | |  |  |  | |  |  |  | |   ___/  |  | 
+   \    /\    /    |  |  |  | |  `--'  | |  `--'  | |  |      |__| 
+    \__/  \__/     |__|  |__|  \______/   \______/  |__|      (__)                           
+
+#endif
 
